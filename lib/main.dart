@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'core/screens/welcome/welcome_screen.dart';
-import 'core/screens/onboarding/onboarding_screen.dart';
+// import 'core/screens/onboarding/onboarding_screen.dart';
 
 void main() {
   runApp(const RestaurantApp());
@@ -14,7 +14,7 @@ class RestaurantApp extends StatelessWidget {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
 
-      home: OnboardingScreen(),
+      home: welcome_screen(),
     );
   }
 }

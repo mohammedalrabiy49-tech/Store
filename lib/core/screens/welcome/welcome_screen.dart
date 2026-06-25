@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:resturnt_app/core/screens/onboarding/onboarding_screen.dart';
 
 class welcome_screen extends StatelessWidget {
   const welcome_screen({super.key});
@@ -45,7 +46,14 @@ class welcome_screen extends StatelessWidget {
               ),
               const Spacer(),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const OnboardingScreen(),
+                    ),
+                  );
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xff0F964A),
                   minimumSize: const Size(double.infinity, 52),
