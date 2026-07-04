@@ -47,7 +47,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   const SizedBox(height: 30),
 
-                  // حقل الاسم الكامل
                   TextFormField(
                     controller: _nameController,
                     keyboardType: TextInputType.name,
@@ -66,7 +65,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   const SizedBox(height: 20),
 
-                  // حقل الإيميل مع التحقق
                   TextFormField(
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
@@ -87,7 +85,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   const SizedBox(height: 20),
 
-                  // حقل كلمة المرور
                   TextFormField(
                     controller: _passwordController,
                     obscureText: _isObscured,
@@ -98,6 +95,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         icon: Icon(
                           _isObscured ? Icons.visibility_off : Icons.visibility,
                         ),
+
                         onPressed: () =>
                             setState(() => _isObscured = !_isObscured),
                       ),
@@ -115,7 +113,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   const SizedBox(height: 40),
 
-                  // زرار الـ SignUp
                   ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {

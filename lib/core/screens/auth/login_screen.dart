@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:resturnt_app/home_screen.dart';
 import 'signup_screen.dart';
 import 'forgot_password_screen.dart';
 
@@ -127,6 +128,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       if (_formKey.currentState!.validate()) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Processing Login...')),
+                        );
+
+                        // هان ضفنا الانتقال لشاشة الهوم سكرين
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const HomeScreen(),
+                          ),
                         );
                       }
                     },
