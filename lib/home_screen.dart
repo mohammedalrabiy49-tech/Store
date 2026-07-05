@@ -11,7 +11,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
 
-  // بيانات تجريبية للـ Recent Orders لعرضها باستخدام ListView.builder
   final List<Map<String, String>> _recentOrders = [
     {
       'table': 'Table 5',
@@ -33,7 +32,6 @@ class _HomeScreenState extends State<HomeScreen> {
     },
   ];
 
-  // دالة لمساعدة الألوان الخاصة بحالة الطلب
   Color _getStatusColor(String status) {
     switch (status) {
       case 'Preparing':
@@ -64,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF9F9F9),
-      // شريط علوي بسيط يحتوي على الأيقونات المطلوبة
+
       appBar: AppBar(
         backgroundColor: const Color(0xFFF9F9F9),
         elevation: 0,
@@ -92,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 10),
-                // ترحيب بالمستخدم
+
                 const Text(
                   'Good Morning,',
                   style: TextStyle(fontSize: 16, color: Colors.grey),
@@ -113,7 +111,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(height: 24),
 
-                // كارد الطلبات النشطة (Active Orders)
                 Card(
                   elevation: 0,
                   shape: RoundedRectangleBorder(
@@ -170,7 +167,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(height: 24),
 
-                // قسم الإجراءات السريعة (Quick Actions)
                 const Text(
                   'Quick Actions',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -198,7 +194,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(height: 24),
 
-                // قسم الطلبات الأخيرة (Recent Orders)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -220,7 +215,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(height: 8),
 
-                // قائمة الطلبات باستخدام ListView.builder لتجنب استهلاك الذاكرة وتطبيق الشروط
                 ListView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
@@ -322,9 +316,8 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
 
-      // شريط التنقل السفلي الاحترافي المطابق للتصميم (BottomNavigationBar)
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 0, // 0 يعني شاشة الهوم نشطة هلقيت
+        currentIndex: 0,
         onTap: (index) {
           if (index == 1) {
             Navigator.pushReplacement(
@@ -363,7 +356,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // بناء الكروت الصغيرة للإجراءات السريعة (Quick Actions)
   Widget _buildQuickActionCard({
     required IconData icon,
     required String label,

@@ -1,89 +1,50 @@
 import 'package:flutter/material.dart';
-import 'home_screen.dart'; // استيراد شاشة الهوم للربط
+import 'package:get/get.dart';
+import 'package:resturnt_app/controllers/orders_controller.dart';
+import 'package:resturnt_app/add_order_screen.dart';
+import 'package:resturnt_app/home_screen.dart';
 
-class OrdersScreen extends StatefulWidget {
+class OrdersScreen extends StatelessWidget {
   const OrdersScreen({super.key});
 
   @override
-  State<OrdersScreen> createState() => _OrdersScreenState();
-}
-
-class _OrdersScreenState extends State<OrdersScreen> {
-  // مؤشر شريط التنقل (1 يعني شاشة الأوردرز)
-  final int _currentIndex = 1;
-
-  final List<String> _categories = [
-    'All',
-    'Pending',
-    'Preparing',
-    'Ready',
-    'Delivered',
-  ];
-  int _selectedCategoryIndex = 0;
-
-  final List<Map<String, String>> _allOrders = [
-    {
-      'table': 'Table 5',
-      'items': 'Pizza x2, Cola',
-      'status': 'Preparing',
-      'price': '\$40',
-      'time': '12 May 2024 • 10:30 AM',
-    },
-    {
-      'table': 'Table 2',
-      'items': 'Burger, Fries',
-      'status': 'Ready',
-      'price': '\$25',
-      'time': '12 May 2024 • 10:15 AM',
-    },
-    {
-      'table': 'Table 8',
-      'items': 'Pasta, Water',
-      'status': 'Delivered',
-      'price': '\$18',
-      'time': '12 May 2024 • 09:50 AM',
-    },
-    {
-      'table': 'Table 3',
-      'items': 'Sandwich, Juice',
-      'status': 'Pending',
-      'price': '\$20',
-      'time': '12 May 2024 • 09:30 AM',
-    },
-  ];
-
-  Color _getStatusColor(String status) {
-    switch (status) {
-      case 'Preparing':
-        return Colors.orange.shade100;
-      case 'Ready':
-        return Colors.green.shade100;
-      case 'Delivered':
-        return Colors.blue.shade100;
-      case 'Pending':
-        return Colors.amber.shade100;
-      default:
-        return Colors.grey.shade100;
-    }
-  }
-
-  Color _getStatusTextColor(String status) {
-    switch (status) {
-      case 'Preparing':
-        return Colors.orange.shade800;
-      case 'Ready':
-        return Colors.green.shade800;
-      case 'Delivered':
-        return Colors.blue.shade800;
-      case 'Pending':
-        return Colors.amber.shade900;
-      default:
-        return Colors.grey.shade800;
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
+    // حقن الكنترولر بشكل دائم في الذاكرة
+    final OrdersController controller = Get.put(
+      OrdersController(),
+      permanent: true,
+    );
+
+    Color _getStatusColor(String status) {
+      switch (status) {
+        case 'Preparing':
+          return Colors.orange.shade100;
+        case 'Ready':
+          return Colors.green.shade100;
+        case 'Delivered':
+          return Colors.blue.shade100;
+        case 'Pending':
+          return Colors.amber.shade100;
+        default:
+          return Colors.grey.shade100;
+      }
+    }
+
+    Color _getStatusTextColor(String status) {
+      switch (status) {
+        case 'Preparing':
+          return Colors.orange.shade800;
+        case 'Ready':
+          return Colors.green.shade800;
+        case 'Delivered':
+          return Colors.blue.shade800;
+        case 'Pending':
+          return Colors.amber.shade900;
+        default:
+          return Colors.grey.shade800;
+      }
+    }
+
     return Scaffold(
       backgroundColor: const Color(0xFFF9F9F9),
       appBar: AppBar(
@@ -108,68 +69,92 @@ class _OrdersScreenState extends State<OrdersScreen> {
         ],
       ),
       body: SafeArea(
-        child: Padding(
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 10),
-              // شريط الفئات الأفقي
+
+              // --- شريط الفئات التفاعلي (تم إزالة الـ Obx المسبب للشاشة الحمراء هان) ---
               SizedBox(
                 height: 38,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: _categories.length,
+                  itemCount: controller.categories.length,
                   itemBuilder: (context, index) {
-                    bool isSelected = _selectedCategoryIndex == index;
-                    return GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _selectedCategoryIndex = index;
-                        });
-                      },
-                      child: Container(
-                        margin: const EdgeInsets.only(right: 10),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 8,
-                        ),
-                        decoration: BoxDecoration(
-                          color: isSelected
-                              ? const Color(0xff0F964A)
-                              : Colors.white,
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(
+                    // نستخدم الـ Obx فقط على النص والخلفية اللي بتتغير قيمتهم داخل الـ Item نفسه
+                    return Obx(() {
+                      bool isSelected =
+                          controller.selectedCategoryIndex.value == index;
+                      return GestureDetector(
+                        onTap: () => controller.changeCategory(index),
+                        child: Container(
+                          margin: const EdgeInsets.only(right: 10),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
+                          decoration: BoxDecoration(
                             color: isSelected
-                                ? Colors.transparent
-                                : Colors.grey.shade200,
+                                ? const Color(0xff0F964A)
+                                : Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: isSelected
+                                  ? Colors.transparent
+                                  : Colors.grey.shade200,
+                            ),
+                          ),
+                          child: Text(
+                            controller.categories[index],
+                            style: TextStyle(
+                              color: isSelected ? Colors.white : Colors.grey,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
                           ),
                         ),
-                        child: Text(
-                          _categories[index],
-                          style: TextStyle(
-                            color: isSelected ? Colors.white : Colors.grey,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ),
-                    );
+                      );
+                    });
                   },
                 ),
               ),
               const SizedBox(height: 20),
 
-              // قائمة الطلبات الكاملة باستخدام ListView.builder للشاشة المستقلة
-              Expanded(
-                child: ListView.builder(
-                  itemCount: _allOrders.length,
+              // --- قائمة الطلبات المحمية تماماً ---
+              Obx(() {
+                if (controller.allOrders.isEmpty) {
+                  return const SizedBox(
+                    height: 200,
+                    child: Center(child: Text('No orders found')),
+                  );
+                }
+
+                var filteredOrders = controller.allOrders.where((order) {
+                  if (controller.selectedCategoryIndex.value == 0) return true;
+                  return order['status'] ==
+                      controller.categories[controller
+                          .selectedCategoryIndex
+                          .value];
+                }).toList();
+
+                if (filteredOrders.isEmpty) {
+                  return const SizedBox(
+                    height: 200,
+                    child: Center(
+                      child: Text('No orders found in this category'),
+                    ),
+                  );
+                }
+
+                return ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: filteredOrders.length,
                   itemBuilder: (context, index) {
-                    final order = _allOrders[index];
-                    if (_selectedCategoryIndex != 0 &&
-                        order['status'] !=
-                            _categories[_selectedCategoryIndex]) {
-                      return const SizedBox.shrink();
-                    }
+                    final order = filteredOrders[index];
                     return Card(
                       margin: const EdgeInsets.only(bottom: 14),
                       elevation: 0,
@@ -180,6 +165,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Column(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
                             Row(
                               children: [
@@ -189,7 +175,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        order['table']!,
+                                        order['table'] ?? '',
                                         style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 16,
@@ -197,7 +183,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                       ),
                                       const SizedBox(height: 4),
                                       Text(
-                                        order['items']!,
+                                        order['items'] ?? '',
                                         style: const TextStyle(
                                           color: Colors.grey,
                                           fontSize: 13,
@@ -212,14 +198,16 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                     vertical: 4,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: _getStatusColor(order['status']!),
+                                    color: _getStatusColor(
+                                      order['status'] ?? 'Pending',
+                                    ),
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   child: Text(
-                                    order['status']!,
+                                    order['status'] ?? 'Pending',
                                     style: TextStyle(
                                       color: _getStatusTextColor(
-                                        order['status']!,
+                                        order['status'] ?? 'Pending',
                                       ),
                                       fontSize: 12,
                                       fontWeight: FontWeight.w600,
@@ -235,7 +223,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                 Row(
                                   children: [
                                     Text(
-                                      order['price']!,
+                                      order['price'] ?? '',
                                       style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 16,
@@ -244,7 +232,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                     ),
                                     const SizedBox(width: 10),
                                     Text(
-                                      order['time']!,
+                                      order['time'] ?? '',
                                       style: const TextStyle(
                                         color: Colors.grey,
                                         fontSize: 12,
@@ -271,7 +259,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                         color: Colors.redAccent,
                                         size: 20,
                                       ),
-                                      onPressed: () {},
+                                      onPressed: () =>
+                                          controller.allOrders.remove(order),
                                       constraints: const BoxConstraints(),
                                       padding: EdgeInsets.zero,
                                     ),
@@ -284,22 +273,20 @@ class _OrdersScreenState extends State<OrdersScreen> {
                       ),
                     );
                   },
-                ),
-              ),
+                );
+              }),
             ],
           ),
         ),
       ),
-
-      // هنا الربط التفاعلي للرجوع للهوم سكرين
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
+        currentIndex: controller.currentIndex.value,
         onTap: (index) {
-          if (index == 0) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const HomeScreen()),
-            );
+          if (index == 2) {
+            Get.to(() => const AddOrderScreen());
+          } else {
+            controller.changePage(index);
+            if (index == 0) Get.offAll(() => const HomeScreen());
           }
         },
         type: BottomNavigationBarType.fixed,
