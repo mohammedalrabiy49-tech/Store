@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "624435344168",
+    "project_id": "restaurant-app-a00d7",
+    "storage_bucket": "restaurant-app-a00d7.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:624435344168:android:cdc4a7a7a0c5aecf0cd61d",
+        "android_client_info": {
+          "package_name": "com.example.resturnt_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDy-7Ggi3bmr74Hlc-COVSpf30SnI6VqpI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
